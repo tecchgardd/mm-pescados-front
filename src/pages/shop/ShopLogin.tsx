@@ -19,15 +19,30 @@ export default function ShopLogin() {
     setError('')
 
     try {
-      const callbackURL = `${window.location.origin}/loja`
+      const backendURL = import.meta.env.VITE_API_URL
+      const callbackURL = `${window.location.origin}/loja/callback`
 
-      await api.post('/auth/sign-in/social', {
-        provider: 'google',
-        callbackURL,
+      const response = await fetch(`${backendURL}/auth/sign-in/social`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          provider: 'google',
+          callbackURL,
+        }),
       })
+
+      const data = await response.json()
+
+      if (data?.url) {
+        window.location.assign(data.url)
+        return
+      }
+
+      setError('Não foi possível iniciar o login com Google.')
+      setIsSubmitting(false)
     } catch (err: any) {
       setError('Falha na autenticação com Google. Tente novamente.')
-    } finally {
       setIsSubmitting(false)
     }
   }
