@@ -20,7 +20,7 @@ export default function ShopLogin() {
 
     try {
       const backendURL = import.meta.env.VITE_API_URL
-      const callbackURL = `${window.location.origin}/loja/callback`
+      const callbackURL = `${window.location.origin}/loja`
 
       const response = await fetch(`${backendURL}/auth/sign-in/social`, {
         method: 'POST',
