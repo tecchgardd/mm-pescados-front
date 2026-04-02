@@ -117,8 +117,14 @@ export default function Orders() {
 
   const totalAmount = useMemo(() => filtered.reduce((acc, o) => acc + o.totalCents / 100, 0), [filtered])
 
-  function updateStatus(id: string, newStatus: ApiOrder['status']) {
-    setItems(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o))
+  async function updateStatus(id: string, newStatus: ApiOrder['status']) {
+    try {
+      await api.patch(`/orders/${id}/status`, { status: newStatus })
+      setItems(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o))
+    } catch (err) {
+      console.error('Erro ao atualizar status:', err)
+      alert('Erro ao atualizar status do pedido.')
+    }
   }
 
   function sendWhatsApp(order: ApiOrder) {
