@@ -19,14 +19,15 @@ export default function ShopLogin() {
     setError('')
 
     try {
-      const backendURL = import.meta.env.VITE_API_URL
-      const callbackURL = encodeURIComponent(`${window.location.origin}/loja`)
+      const callbackURL = `${window.location.origin}/loja`
 
-      window.location.assign(
-        `${backendURL}/auth/sign-in/social?provider=google&callbackURL=${callbackURL}`
-      )
+      await api.post('/auth/sign-in/social', {
+        provider: 'google',
+        callbackURL,
+      })
     } catch (err: any) {
       setError('Falha na autenticação com Google. Tente novamente.')
+    } finally {
       setIsSubmitting(false)
     }
   }
